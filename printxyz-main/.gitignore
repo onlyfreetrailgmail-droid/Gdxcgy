@@ -1,0 +1,13 @@
+node_modules
+client/dist
+server/.env
+.env
+.DS_Store
+server/data/*.db
+server/data/*.db-shm
+server/data/*.db-wal
+server/data/uploads/
+server/data/store.json
+test-results
+playwright-report
+e2e/.auth

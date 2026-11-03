@@ -1,0 +1,235 @@
+PRINTXYZ — Exact Design Reference Replication Prompt
+
+1. Objective
+
+I will provide a reference image showing the desired design for my Printxyz ecommerce website.
+
+Your task is to reproduce the same visual theme, colour palette, layout, spacing, typography, component styling, and overall design language shown in the reference image in my existing website project.
+
+Treat the provided image as the primary visual source of truth. Do not create a different design inspired by it. Reproduce the design as faithfully as possible while making it responsive, functional, accessible, and suitable for a production ecommerce website.
+
+Priority order:
+
+1. Visual fidelity to the reference image.
+2. Consistency across all website pages.
+3. Responsive desktop, tablet, and mobile layouts.
+4. Preservation of existing website functionality.
+5. Maintainable and reusable implementation.
+
+2. Brand identity and exact colours
+
+Use these exact brand colours throughout the website:
+
+- Primary deep navy: "#0F172A"
+- Accent orange: "#F97316"
+- Main background: "#FFFFFF"
+- Secondary background: "#F8FAFC"
+- Primary text: "#0F172A"
+- Muted text: "#64748B"
+- Success: "#16A34A"
+- Error: "#DC2626"
+
+Do not substitute these colours with similar shades.
+
+Use orange for calls to action, selected states, important highlights, and promotional elements in the same way as the reference image. Use navy for the main brand identity, text, and navigation where appropriate. Use white and soft grey for page backgrounds and content sections.
+
+Do not apply every colour everywhere. Follow the reference image's colour proportions and hierarchy.
+
+If the reference image shows a particular component using a specific colour, preserve that relationship while respecting the exact brand palette.
+
+3. Analyse the reference image before coding
+
+First, inspect the provided image and identify:
+
+- Overall page structure and section order.
+- Header height, navigation arrangement, and logo placement.
+- Main content width and alignment.
+- Typography styles, font weights, sizes, and line heights.
+- Background colours and section boundaries.
+- Button colours, dimensions, corner radius, and text styling.
+- Card sizes, borders, shadows, and spacing.
+- Image proportions, crop positions, and aspect ratios.
+- Product grid columns and gaps.
+- Icons, badges, labels, dividers, and decorative details.
+- Whitespace and visual hierarchy.
+- Desktop-specific layout decisions.
+
+Create a concise implementation plan based on these observations before modifying the code.
+
+Do not invent visual elements that conflict with the reference.
+
+4. Design system
+
+Create a central design system that controls the entire website.
+
+Colour tokens
+
+Define reusable CSS custom properties or equivalent Tailwind theme tokens for all brand colours. Reference these tokens throughout the application instead of repeating hardcoded colour values.
+
+Typography
+
+Match the reference image's typography as closely as possible. If the exact font cannot be identified, choose the closest suitable alternative and use it consistently.
+
+Define reusable text styles for:
+
+- Main page headings.
+- Section headings.
+- Product names.
+- Prices and discounted prices.
+- Descriptions and supporting text.
+- Navigation links.
+- Buttons and form labels.
+- Badges and status indicators.
+
+Spacing and layout
+
+Establish consistent values for:
+
+- Page margins and horizontal padding.
+- Section spacing.
+- Card padding.
+- Grid gaps.
+- Header and footer dimensions.
+- Form-field spacing.
+- Button height and padding.
+
+Match the reference image rather than imposing an unrelated design system.
+
+Components
+
+Create reusable components for common elements, including buttons, cards, inputs, product cards, badges, navigation, and section headings.
+
+Ensure repeated components look identical across the website unless the reference clearly requires a variation.
+
+5. Page implementation
+
+Apply the reference design to all relevant pages, preserving each page's purpose and functionality.
+
+Homepage
+
+- Reproduce the reference header, hero section, content hierarchy, product sections, category sections, promotional areas, and footer.
+- Match the image placement, section backgrounds, spacing, and call-to-action styling.
+- Keep product photography prominent.
+
+Product listing and category pages
+
+- Match the reference's product grid, filters, sorting controls, product cards, pricing, badges, and pagination.
+- Preserve responsive column counts and spacing where practical.
+
+Product details page
+
+- Match the reference's image gallery, product title, pricing, variant selectors, quantity controls, customization options, delivery information, and purchase buttons.
+- Preserve existing product-specific functionality.
+
+Cart and checkout
+
+- Apply the same typography, colours, buttons, forms, borders, and spacing.
+- Keep checkout clear and easy to follow without sacrificing the reference's visual style.
+- Preserve existing cart calculations, address handling, and payment integration.
+
+Customer account
+
+- Use the same design language for order history, order details, profile information, and tracking.
+
+Admin dashboard
+
+- Apply the same brand colours, typography, buttons, tables, forms, and card styling while keeping the dashboard efficient for management tasks.
+
+Do not force every page to use an identical layout. Reuse the same design system while adapting each page to its function.
+
+6. Product presentation
+
+Printxyz sells 3D-printed gifts and decorative products.
+
+Product images must be clear, high quality, and presented consistently. Use appropriate image aspect ratios and predictable image containers. Avoid stretching, distorting, or unnecessarily cropping product photographs.
+
+Preserve existing product images and content. Do not replace real product assets with generated placeholders unless explicitly requested.
+
+If an image from the reference is only a visual example, use the appropriate existing asset from the project instead of copying unrelated product content.
+
+7. Responsive behaviour
+
+Reproduce the design faithfully at desktop widths first, then adapt it carefully for tablets and mobile devices.
+
+On smaller screens:
+
+- Stack multi-column sections appropriately.
+- Maintain comfortable page padding.
+- Keep buttons and form controls easy to use.
+- Prevent horizontal overflow.
+- Make product grids responsive.
+- Ensure navigation and menus remain usable.
+- Keep text readable without awkward wrapping.
+- Preserve the original design's hierarchy and brand identity.
+
+Do not simply shrink the desktop page to fit a mobile screen.
+
+8. Preserve existing functionality
+
+This is a visual redesign, not permission to rebuild the business logic.
+
+Before editing, inspect the existing codebase and identify its framework, routes, reusable components, styling system, API integrations, and current features.
+
+Do not break or remove:
+
+- Authentication and Google login.
+- Product data and variants.
+- Custom-order workflows and photo uploads.
+- Cart and checkout.
+- Razorpay integration and payment verification.
+- Order history and order tracking.
+- Admin permissions and product management.
+- Inventory and pricing calculations.
+- Existing SEO metadata and analytics.
+- API routes and database operations.
+
+Do not introduce mock checkout, fake payment success, hardcoded production data, or nonfunctional buttons.
+
+Reuse the existing architecture and dependencies whenever possible.
+
+9. Implementation standards
+
+- Use reusable components and centralised design tokens.
+- Follow the project's existing coding conventions.
+- Avoid duplicated CSS and unnecessary dependencies.
+- Use semantic HTML and accessible form labels.
+- Include visible keyboard-focus states.
+- Maintain appropriate contrast and readable text.
+- Use consistent hover, active, disabled, loading, success, and error states.
+- Avoid layout shifts while images load.
+- Optimise images and avoid unnecessary rendering overhead.
+- Do not change database schemas or backend APIs unless required and explicitly justified.
+
+10. Visual verification
+
+After implementation, compare the website against the supplied reference image.
+
+Check:
+
+- Colour accuracy.
+- Layout proportions.
+- Section order.
+- Typography and text hierarchy.
+- Image sizing and positioning.
+- Spacing and alignment.
+- Button dimensions and styling.
+- Borders, shadows, and corner radii.
+- Desktop and mobile responsiveness.
+
+Fix obvious mismatches before declaring the work complete.
+
+If the reference image does not show a particular page or interaction, extend the established design system consistently rather than inventing a competing visual style.
+
+11. Deliverables
+
+Complete the implementation in the existing project, not merely a design proposal.
+
+At the end, provide:
+
+1. A summary of the pages and components updated.
+2. The design tokens and shared components created or modified.
+3. Any existing features that could not be preserved, with the reason.
+4. Any assumptions made because the reference image did not provide enough information.
+5. The result of available build, lint, and relevant functional tests.
+
+Final instruction: The result should look as close as reasonably possible to the supplied reference image, use the exact Printxyz brand hex colours, and remain a working ecommerce website. Visual accuracy is more important than adding new decorative features or redesigning the reference.

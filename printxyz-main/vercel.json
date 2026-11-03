@@ -1,0 +1,73 @@
+{
+  "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "https://printxyz-api.onrender.com/api/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://printxyz-api.onrender.com/api/sitemap.xml"
+    },
+    {
+      "source": "/s/:code",
+      "destination": "https://printxyz-api.onrender.com/s/:code"
+    },
+    {
+      "source": "/product/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|whatsapp|twitterbot|slackbot|linkedinbot|telegrambot|discordbot|pinterest).*"
+        }
+      ],
+      "destination": "https://printxyz-api.onrender.com/api/seo/product/:slug"
+    },
+    {
+      "source": "/category/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|whatsapp|twitterbot|slackbot|linkedinbot|telegrambot|discordbot|pinterest).*"
+        }
+      ],
+      "destination": "https://printxyz-api.onrender.com/api/seo/category/:slug"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://printxyz-api.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        }
+      ]
+    }
+  ]
+}

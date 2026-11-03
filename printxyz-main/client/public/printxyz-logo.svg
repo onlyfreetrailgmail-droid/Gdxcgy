@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Printxyz logo">
+  <defs>
+    <linearGradient id="cubeGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff7a18"/>
+      <stop offset="50%" stop-color="#ff4d9d"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0 2)">
+    <path d="M144 120L256 64L368 120L256 176L144 120Z" fill="url(#cubeGradient)" opacity="0.18"/>
+    <path d="M256 176V328L144 272V120L256 176Z" fill="url(#cubeGradient)"/>
+    <path d="M256 176V328L368 272V120L256 176Z" fill="url(#cubeGradient)" opacity="0.95"/>
+    <path d="M144 120L256 176L256 328L144 272V120Z" fill="url(#cubeGradient)" opacity="0.85"/>
+    <path d="M88 136L256 232L256 328L88 232V136Z" fill="#1d2437" opacity="0.96"/>
+    <path d="M256 232L424 136V232L256 328V232Z" fill="#1d2437" opacity="0.96"/>
+    <path d="M160 196L184 180L248 214L248 254L160 196Z" fill="#ffffff" opacity="0.92"/>
+    <path d="M256 214L332 180L332 220L256 254V214Z" fill="#ffffff" opacity="0.9"/>
+    <path d="M200 182L256 214L256 334L200 302V182Z" fill="#ffffff" opacity="0.96"/>
+    <path d="M256 214L312 182L312 302L256 334V214Z" fill="#ffffff" opacity="0.9"/>
+  </g>
+  <g transform="translate(90 118)">
+    <text x="88" y="210" font-family="Inter, Arial, sans-serif" font-size="180" font-weight="900" fill="url(#textGradient)" letter-spacing="-14">P</text>
+    <text x="184" y="210" font-family="Inter, Arial, sans-serif" font-size="180" font-weight="900" fill="url(#textGradient)" letter-spacing="-14">X</text>
+  </g>
+</svg>

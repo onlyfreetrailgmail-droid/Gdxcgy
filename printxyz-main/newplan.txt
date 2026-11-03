@@ -1,0 +1,317 @@
+Additional Mandatory Printxyz Requirements: Order Tracking and Resend
+
+Audit the existing Printxyz codebase and integrate the following into the existing production blueprint. Preserve all existing requirements, including no COD, Instagram/Meta Ads integration, campaign landing pages, shareable product URLs, custom-order approval, online payments, and automated shipping.
+
+Customer order tracking
+
+- Provide an authenticated customer order-history page and a dedicated order-details/tracking page.
+- Show order status, payment status, order items, approved custom preview status, shipment status, estimated delivery when available, courier name, tracking number, and courier tracking link.
+- Support the workflow: placed, payment confirmed, awaiting custom review, awaiting customer approval, approved, queued for production, printing, quality check, packed, shipped, in transit, out for delivery, delivered, cancelled, and refund processing/completed where applicable.
+- Define valid status transitions and keep payment, production, and shipping statuses separate.
+- Use verified payment and courier webhooks where available. Verify webhook signatures, handle duplicate/out-of-order events, and make processing idempotent.
+- Provide secure guest tracking through high-entropy, revocable tokens that reveal only limited order information. Never expose orders through predictable IDs.
+- Do not invent courier events or guarantee delivery dates that the shipping provider cannot support.
+
+Resend email integration
+
+- Integrate Resend through server-side API calls.
+- Verify the sending domain and configure SPF, DKIM, and any required DMARC policy.
+- Store the API key in server-side environment secrets. Never expose it in frontend code, logs, or public API responses.
+- Build reusable branded email templates that match Printxyz's approved design system and work on mobile.
+- Support welcome, order confirmation, verified payment confirmation, custom upload receipt, preview ready, approval request, production update, shipment confirmation, delivery update, balance-payment reminder, cancellation, refund update, and security-related emails where applicable.
+- Trigger emails from reliable server-side events, not merely frontend page visits.
+- Use an email job queue or durable retry mechanism with idempotency, bounded retries, failure logs, and monitoring. Avoid sending duplicate messages when webhooks are retried.
+- Track delivery, bounce, and complaint events when available. Do not treat an email as delivered just because the API accepted the request.
+- Separate essential transactional email from marketing email. Implement consent, unsubscribe, suppression, and frequency controls as applicable.
+- Add a safe admin test-email function and template preview.
+
+Abandoned-cart reminders
+
+- Store carts safely and associate them with an account or a contact method when available.
+- Define a configurable delay and frequency limit; never send repeated reminders indefinitely.
+- Send only when the customer can lawfully and appropriately be contacted. Respect consent, opt-outs, and suppression lists.
+- Stop reminders when the customer purchases, empties the cart, opts out, or the reminder expires.
+- Never describe a pending checkout as a paid order. Revalidate price, availability, and discounts when the customer returns.
+- Measure recovered paid orders, not just email clicks.
+
+Admin controls and reports
+
+- Add email configuration health, template preview, test-send, delivery/failure logs, and retry controls to the admin dashboard.
+- Show order tracking history and status-change audit logs.
+- Report email sends, delivery failures, abandoned-cart recovery, paid conversion, refunds, and campaign attribution where supported.
+- Restrict staff permissions and redact personal information from logs.
+
+Required acceptance tests
+
+- Customers cannot access other customers' orders.
+- Guest tracking tokens are unpredictable, revocable, and disclose limited information.
+- Emails are triggered only by appropriate server-side events.
+- Duplicate webhooks do not create duplicate orders, payment records, or emails.
+- Failed or pending payments never trigger a successful-payment email or purchase conversion event.
+- Shipment emails include the correct verified tracking information.
+- Cart reminders stop after purchase or opt-out.
+- Email-provider outages do not lose order state or block checkout.
+- Backups, monitoring, security checks, and critical end-to-end flows are tested before production launch.
+
+First report which features already exist, which are missing, and which require provider credentials or owner decisions. Implement in small tested phases. Do not claim production readiness without evidence from tests.
+
+
+
+
+Your admin dashboard should store:
+Order ID and order date.
+Customer name and delivery details.
+Product, quantity, customisation and product price.
+Discount, shipping fee and total amount.
+Amount paid, balance due and refund amount.
+Payment method and payment status.
+Invoice or receipt number.
+Courier, tracking number and delivery status.
+
+Field Example
+Order ID PX-2026-0001
+Payment Paid / Partially paid / Pending / Refunded
+Production Awaiting approval / Printing / Quality check
+Fulfilment Packing / Shipped / Delivered / Returned
+Invoice View or download PDF
+Courier Selected courier
+Tracking ID Courier tracking number
+Shipping cost Actual courier charge
+Claim status Not required / Open / Resolved
+Keep payment status, production status and
+PRINTXYZ — SEO, Local SEO and GEO: P0 Launch Requirement
+
+SEO is a top-priority launch requirement. Audit the existing codebase and implement complete technical SEO, ecommerce SEO, image SEO, local SEO, and Generative Engine Optimization (GEO). Do not treat SEO as a later enhancement.
+
+Technical SEO
+
+1. Generate a correct production-domain robots.txt and dynamic XML sitemap.
+2. Include only canonical, public, indexable URLs in the sitemap. Update it when products, categories, campaigns, and articles change.
+3. Implement unique page titles, meta descriptions, canonical URLs, clean readable URLs, correct H1/H2 hierarchy, crawlable internal links, breadcrumbs, and social-sharing metadata.
+4. Implement correct 301 redirects for permanent URL changes and proper 404/410 responses for removed content.
+5. Keep staging environments out of search indexes and prevent private customer, account, checkout, cart, internal search, and admin pages from being indexed.
+6. Use noindex directives or authentication appropriately. Never rely on robots.txt alone to prevent indexing.
+7. Ensure important product and category content can be discovered and rendered by search engines. Do not depend entirely on search forms or inaccessible JavaScript navigation.
+8. Optimize mobile performance, Core Web Vitals, image loading, HTTPS, accessibility, and broken-link handling.
+9. Verify sitemap, canonical URLs, status codes, robots rules, and metadata automatically in tests.
+
+Ecommerce structured data
+
+Implement and validate appropriate JSON-LD structured data, including:
+
+- Product and Offer for eligible product pages.
+- Accurate price, INR currency, stock availability, and public product URLs.
+- BreadcrumbList for product and category navigation.
+- Organization and logo details.
+- LocalBusiness only when accurate and appropriate for the real business.
+- Genuine review markup only when eligible and consistent with visible reviews.
+  Never invent prices, availability, ratings, reviews, locations, or business credentials. Structured data does not guarantee rich results.
+
+Search Console and webmaster tools
+
+- Prepare Google Search Console verification and sitemap submission.
+- Prepare Bing Webmaster Tools verification and sitemap submission.
+- Provide an admin/developer checklist for domain verification, URL inspection, indexing issues, structured-data errors, and crawl errors.
+- Monitor organic impressions, clicks, click-through rate, indexed pages, queries, and landing-page performance.
+- Add deployment checks for broken metadata, missing canonical URLs, invalid sitemap entries, accidental noindex, and broken redirects.
+- Where appropriate, support IndexNow for participating search engines without treating submission as a guarantee of indexing.
+
+Keyword and content architecture
+
+Create a keyword-to-URL plan for real products and customer search intent, covering relevant themes such as:
+
+- 3D-printed gifts and personalized gifts.
+- Custom miniatures, miniature figurines, and custom figures from photos.
+- Personalized couple, family, anniversary, and occasion gifts.
+- Custom pet figurines and pet keepsakes.
+- Lithophane/photo lamps and personalized home décor.
+- Decorative and devotional 3D-printed products that are actually sold.
+- Custom 3D printing services and local Patna searches where relevant.
+
+Create distinct category pages, product pages, useful FAQs, buying guides, material/care information, customization explanations, shipping information, and genuinely helpful blog content. Use keyword research to determine priorities. Avoid keyword stuffing, copied descriptions, doorway pages, and mass-generated thin content. Do not create pages for products or services the business does not offer.
+
+Product and image SEO
+
+- Give every product a unique title, description, slug, image alt text, social preview, canonical URL, and relevant internal links.
+- Use descriptive image filenames and optimized formats such as WebP/AVIF when supported.
+- Include useful product dimensions, materials, customization options, production estimates, and accurate prices where applicable.
+- Preserve stable product URLs and add redirects if slugs change.
+- Never expose private customer-uploaded photos in public pages, sitemaps, or social previews.
+
+Local SEO and GEO
+
+- Keep the business identity, contact information, shipping/service coverage, and public policies accurate and consistent.
+- Support Google Business Profile links and verification guidance if the business is eligible.
+- Build local landing pages only for genuine service areas and provide unique, useful local information.
+- Structure content clearly with direct answers, descriptive headings, useful FAQs, explicit facts, and consistent product/business entities.
+- Make pages understandable to search engines and AI-powered search systems. Do not promise first-page rankings, AI citations, or guaranteed traffic.
+
+Admin SEO tools
+
+- Allow authorized administrators to edit SEO titles, descriptions, slugs, social previews, image alt text, and indexability settings.
+- Provide sensible automatic defaults and warn about duplicate titles, missing descriptions, broken canonical URLs, and missing product content.
+- Protect production robots.txt, sitemap, and indexing settings from accidental misconfiguration.
+- Allow campaign pages to be indexed or noindexed intentionally, based on their purpose and content quality.
+
+Launch acceptance tests
+
+Before launch, test robots.txt, XML sitemap validity, canonical URLs, metadata, schema validity, redirect behavior, mobile performance, crawlable navigation, private-page protection, and Search Console readiness. Re-test after deployment and major releases.
+
+First audit the existing codebase, identify completed and missing features, and implement the work in tested phases. Do not claim SEO is complete merely because robots.txt and a sitemap exist.
+Mandatory Printxyz Requirements — No COD and Instagram-First Commerce
+
+Update the existing Printxyz production blueprint and implementation plan with these mandatory requirements. Audit the existing codebase before changing anything.
+
+Payment policy
+
+- Cash on Delivery (COD) must be completely disabled across the storefront, checkout, APIs, admin panel, and order workflows.
+- Accept only configured online payment methods.
+- Never mark an order as paid based only on a browser redirect.
+- Support a configurable advance and balance-payment workflow for custom products, subject to the owner's approved policy.
+
+Meta Ads integration
+
+- Integrate Meta Pixel and, where appropriate, Meta Conversions API.
+- Track page views, product views, add-to-cart, checkout initiation, and verified purchases.
+- Deduplicate browser and server events.
+- Send purchase events only after verified payment.
+- Preserve campaign attribution and UTM parameters through checkout.
+- Provide testing and diagnostics for tracking events.
+- Keep credentials and access tokens on the server, never in public frontend code.
+
+Campaign landing-page builder
+
+- Admin must be able to create, edit, preview, publish, unpublish, schedule, duplicate, and archive campaign landing pages without a code deployment.
+- Each landing page must support its own URL, hero section, campaign copy, selected products, offer details, FAQs, images, and CTA buttons.
+- Landing pages must remain separate from the homepage.
+- Support event launches, festive offers, product launches, and Instagram-ad-specific campaigns.
+- Validate all discount and expiry rules on the server.
+- Support campaign analytics, social previews, SEO metadata, and mobile-first performance.
+
+Product sharing
+
+- Every product must have a clean, permanent, shareable URL.
+- Admin must be able to copy the product URL easily.
+- Product links must open the correct product page, not the homepage.
+- Configure social sharing metadata so supported platforms can show the correct product title, image, description, and brand.
+- If a product URL changes, redirect the old URL where possible.
+- Never expose private customer photos or order data through public links.
+
+Completion criteria
+
+Test that COD is unavailable everywhere, Meta events are accurate and deduplicated, campaigns can be published without deployment, product links open the correct product, and online payments are verified securely.
+
+Do not claim any feature is production-ready until its implementation and tests have been verified. Preserve existing working functionality and report any required Meta Business settings, payment-provider credentials, or owner decisions.1. Customer-facing website
+[ ] Premium, mobile-first homepage
+[ ] Product categories and search/filtering
+[ ] Individual product pages with clean shareable URLs
+[ ] High-quality product galleries and zoom
+[ ] Product variants, sizes, pricing and customization options
+[ ] Cart, checkout and customer accounts
+[ ] About, contact, FAQ and trust sections
+[ ] Shipping, cancellation, refund, privacy and terms pages
+
+2. Instagram ads and campaign pages
+[ ] Meta Pixel integration
+[ ] Meta Conversions API with event deduplication
+[ ] Track ViewContent, AddToCart, InitiateCheckout and verified Purchase
+[ ] Preserve UTM parameters and campaign attribution
+[ ] Admin campaign landing-page builder, separate from homepage
+[ ] Create and publish offer/event/product-launch pages without code changes
+[ ] Unique social preview image, title and description per page
+[ ] Coupon codes, bundles, eligibility and expiry rules
+[ ] Product link copy/share controls
+
+3. Payments — no COD
+[ ] Online payment gateway integration
+[ ] No COD anywhere in checkout or APIs
+[ ] Server-side payment verification and signed webhooks
+[ ] Order confirmation only after a valid order is created
+[ ] Payment success, failure, pending and retry handling
+[ ] Custom order advance/balance payment workflow if configured
+[ ] Refund processing and payment reconciliation
+[ ] Invoices and tax records appropriate to the business
+
+4. Custom 3D printing workflow
+[ ] Customer photo/file upload with validation
+[ ] Selected size, customization details and order notes
+[ ] Private file storage and access controls
+[ ] Admin review of uploaded files
+[ ] Preview creation and customer approval/rejection
+[ ] Revision limits and approval history
+[ ] Production queue and print status
+[ ] Quality-control and packing checklist
+[ ] Failed print, reprint and material usage records
+
+5. Order tracking and shipping
+[ ] Customer order history and order details
+[ ] Secure guest tracking link
+[ ] Separate payment, production and shipping statuses
+[ ] Courier/shipping provider integration
+[ ] Shipping label and pickup workflow
+[ ] Courier tracking number and tracking URL
+[ ] Shipment webhook updates
+[ ] Shipped, in-transit, out-for-delivery and delivered updates
+[ ] Lost, delayed, damaged and returned shipment handling
+
+6. Resend transactional email
+[ ] Verified sending domain and server-side Resend API key
+[ ] Branded welcome email
+[ ] Order and verified payment confirmation
+[ ] Custom upload and preview approval emails
+[ ] Production and shipment updates
+[ ] Delivery, cancellation and refund notifications
+[ ] Balance payment reminders where applicable
+[ ] Abandoned-cart reminders with appropriate consent and frequency limits
+[ ] Bounce, failure, retry and duplicate-email handling
+[ ] Email templates, test-send and delivery logs in admin
+
+7. SEO, local SEO and GEO
+[ ] robots.txt and dynamic XML sitemap
+[ ] Canonical URLs, redirects and correct HTTP status codes
+[ ] Unique title, meta description and headings on every important page
+[ ] Product, Offer, BreadcrumbList and Organization structured data as appropriate
+[ ] Optimized product images, alt text and social metadata
+[ ] Google Search Console and Bing Webmaster Tools setup
+[ ] Mobile performance and Core Web Vitals
+[ ] Internal links, crawlable navigation and broken-link checks
+[ ] Keyword strategy for gifts, custom miniatures, photo lamps and 3D printing
+[ ] Useful category pages, product FAQs and original buying guides
+[ ] Local SEO for genuine service areas, including Patna if applicable
+[ ] AI-search-friendly, factual content without ranking guarantees
+[ ] Noindex/authentication for private or unsuitable pages
+
+8. Admin dashboard
+[ ] Secure admin login and role-based permissions
+[ ] Orders, customers, products and category management
+[ ] Campaign landing-page and coupon management
+[ ] Payment, refund and shipping management
+[ ] Custom photo/preview approval workflow
+[ ] Email templates, logs and retry controls
+[ ] SEO metadata and sitemap controls
+[ ] Inventory, filament and production capacity
+[ ] Audit logs for sensitive actions
+[ ] Dashboard for revenue, orders, refunds and costs
+
+9. Analytics and profitability
+[ ] Sales and order trends
+[ ] Ad spend, attributed purchases and campaign conversion
+[ ] Product-level revenue and contribution margin
+[ ] Filament, packaging, payment fees, shipping and reprint costs
+[ ] Refunds, cancellations and failed deliveries
+[ ] Average order value and repeat purchases
+[ ] Abandoned-cart recovery reporting
+[ ] Separate revenue, gross margin, contribution and net profit
+
+10. Reliability, security and legal readiness
+[ ] Server-side validation and authorization
+[ ] Secrets stored in environment variables
+[ ] Rate limiting and abuse protection
+[ ] Secure uploads and private customer files
+[ ] Database indexes and reliable transactions where needed
+[ ] Idempotent payment/shipping/email webhooks
+[ ] Automated backups and tested restore procedure
+[ ] Error monitoring, logs and alerts
+[ ] Automated tests and production deployment checks
+[ ] Mobile, accessibility, browser and payment-flow testing
+[ ] Data retention, deletion and customer privacy controls

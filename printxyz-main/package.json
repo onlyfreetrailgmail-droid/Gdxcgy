@@ -1,0 +1,25 @@
+{
+  "name": "printxyz",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
+    "build": "npm run build --workspace client",
+    "start": "npm run start --workspace server",
+    "test": "npm test --workspace server",
+    "test:e2e": "npm run build && playwright test -c e2e/playwright.config.js",
+    "e2e:server": "node server/scripts/e2e-server.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "@playwright/test": "^1.56.0"
+  },
+  "engines": {
+    "node": ">=20 <23",
+    "npm": ">=10"
+  }
+}

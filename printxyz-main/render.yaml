@@ -1,0 +1,62 @@
+services:
+  # One service hosts the API and the website (the API serves client/dist), so the Content-Security-Policy,
+  # cookies and rate limits all apply to the whole site. Deploy = push to git; then fill the values below once.
+  - type: web
+    name: printxyz-api
+    env: node
+    plan: starter            # free plan sleeps and breaks webhooks; use a paid instance
+    rootDir: .
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health   # process check. Point your uptime monitor at /api/ready (also checks the database)
+    envVars:
+      - { key: NODE_ENV, value: production }
+      - { key: NODE_VERSION, value: "22" }
+      - { key: JWT_SECRET, generateValue: true }
+      - { key: JWT_REFRESH_SECRET, generateValue: true }
+      - { key: ALLOW_INDEXING, value: "true" }
+      - { key: DELHIVERY_MODE, value: "staging" }
+      - { key: FREE_SHIPPING_THRESHOLD_RUPEES, value: "1499" }
+      - { key: SHIPPING_FEE_RUPEES, value: "0" }
+      - { key: ADVANCE_PERCENT, value: "50" }
+      - { key: ADVANCE_MIN_TOTAL_RUPEES, value: "2000" }
+      - { key: BULK_MIN_QUANTITY, value: "10" }
+      - { key: RETURN_WINDOW_DAYS, value: "7" }
+      - { key: TRUST_PROXY_HOPS, value: "1" }
+      # Fill these in the Render dashboard (sync: false keeps secrets out of git).
+      - { key: CLIENT_URL, sync: false }
+      - { key: PUBLIC_SITE_URL, sync: false }
+      - { key: MONGODB_URI, sync: false }
+      - { key: MONGODB_DB, sync: false }
+      - { key: RAZORPAY_KEY_ID, sync: false }
+      - { key: RAZORPAY_KEY_SECRET, sync: false }
+      - { key: RAZORPAY_WEBHOOK_SECRET, sync: false }
+      - { key: CLOUDINARY_CLOUD_NAME, sync: false }
+      - { key: CLOUDINARY_API_KEY, sync: false }
+      - { key: CLOUDINARY_API_SECRET, sync: false }
+      - { key: GOOGLE_CLIENT_ID, sync: false }
+      - { key: VITE_GOOGLE_CLIENT_ID, sync: false }
+      - { key: VITE_SITE_URL, sync: false }
+      - { key: RESEND_API_KEY, sync: false }
+      - { key: RESEND_FROM_EMAIL, sync: false }
+      - { key: RESEND_WEBHOOK_SECRET, sync: false }
+      - { key: SUPPORT_EMAIL, sync: false }
+      - { key: SUPPORT_PHONE, sync: false }
+      - { key: META_PIXEL_ID, sync: false }
+      - { key: META_ACCESS_TOKEN, sync: false }
+      - { key: META_TEST_EVENT_CODE, sync: false }
+      - { key: GA_MEASUREMENT_ID, sync: false }
+      - { key: SENTRY_DSN, sync: false }
+      - { key: ALERT_EMAIL, sync: false }
+      - { key: ALERT_WEBHOOK_URL, sync: false }
+      - { key: UPTIME_HEARTBEAT_URL, sync: false }
+      - { key: ADMIN_EMAIL, sync: false }
+      - { key: ADMIN_PASSWORD, sync: false }
+      - { key: SHIPROCKET_EMAIL, sync: false }
+      - { key: SHIPROCKET_PASSWORD, sync: false }
+      - { key: SHIPROCKET_PICKUP_LOCATION, sync: false }
+      - { key: SHIPROCKET_WEBHOOK_TOKEN, sync: false }
+      - { key: DELHIVERY_TOKEN, sync: false }
+      - { key: DELHIVERY_PICKUP_LOCATION, sync: false }
+      - { key: DELHIVERY_WEBHOOK_SECRET, sync: false }
+      - { key: PICKUP_PINCODE, sync: false }
