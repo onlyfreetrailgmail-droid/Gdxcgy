@@ -1,13 +1,17 @@
+
 import { useEffect, useState } from 'react';
 
 // Asks the server (which asks the couriers). Shows an estimate only if a courier returned one.
+// NOTE: this is a plain <div>, not a <form>. It is rendered inside the checkout <form>, and a
+// form inside a form made the "Check" button submit/reset the whole checkout page.
 export default function PincodeCheck({ initial = '' }) {
   const [pincode, setPincode] = useState(initial);
   useEffect(() => { if (/^\d{6}$/.test(initial)) setPincode(initial); }, [initial]);
   const [state, setState] = useState({ loading: false, message: '', tone: '' });
 
   const check = async (event) => {
-    event.preventDefault();
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
     if (!/^[1-9]\d{5}$/.test(pincode)) {
       setState({ loading: false, message: 'Enter a valid 6-digit pincode.', tone: 'error' });
       return;
@@ -32,14 +36,15 @@ export default function PincodeCheck({ initial = '' }) {
   };
 
   return (
-    <form className="pincode-check" onSubmit={check} aria-label="Check delivery">
+    <div className="pincode-check" role="group" aria-label="Check delivery">
       <label htmlFor="pincode-input">Check delivery</label>
       <div className="pincode-row">
         <input id="pincode-input" inputMode="numeric" maxLength={6} placeholder="Pincode" value={pincode}
-          onChange={(event) => setPincode(event.target.value.replace(/\D/g, ''))} />
-        <button type="submit" className="secondary-btn" disabled={state.loading}>{state.loading ? 'Checking…' : 'Check'}</button>
+          onChange={(event) => setPincode(event.target.value.replace(/\D/g, ''))}
+          onKeyDown={(event) => { if (event.key === 'Enter') check(event); }} />
+        <button type="button" className="secondary-btn" disabled={state.loading} onClick={check}>{state.loading ? 'Checking…' : 'Check'}</button>
       </div>
       {state.message && <p role="status" className={`pincode-msg ${state.tone}`}>{state.message}</p>}
-    </form>
+    </div>
   );
 }
