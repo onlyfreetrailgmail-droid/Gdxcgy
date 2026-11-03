@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useSeo, productLd, breadcrumbLd, organizationLd, websiteLd, isPrivatePath } from './seo';
 import { initTracking, pageView, trackViewContent, trackAddToCart, trackInitiateCheckout, trackPurchase, getAttributionForOrder, hasMarketingConsent } from './tracking';
@@ -899,6 +899,8 @@ function CheckoutPage({ cart, clearCart }) {
   const [orderId, setOrderId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState('');
+  const [quoteError, setQuoteError] = useState('');
+  const errorRef = useRef(null);
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '', street: '', apartment: '', landmark: '',
     city: '', state: '', pincode: '', country: 'India'
@@ -921,8 +923,8 @@ function CheckoutPage({ cart, clearCart }) {
     const timer = setTimeout(() => {
       fetch('/api/cart/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cartItems, couponCode, pincode: pin }) })
         .then((r) => r.json().then((d) => ({ ok: r.ok, d })))
-        .then(({ ok, d }) => { if (live) setQuote(ok ? d : null); })
-        .catch(() => { if (live) setQuote(null); });
+        .then(({ ok, d }) => { if (!live) return; setQuote(ok ? d : null); setQuoteError(ok ? '' : (d?.error?.message || 'Could not price your cart. Remove the item and add it again.')); })
+        .catch(() => { if (live) { setQuote(null); setQuoteError('Could not reach the server. Check your connection.'); } });
     }, 400);
     return () => { live = false; clearTimeout(timer); };
   }, [cart.length, couponCode, pin]);
@@ -938,12 +940,21 @@ function CheckoutPage({ cart, clearCart }) {
     return '';
   };
 
+  const showError = (message) => {
+    setPaymentError(message);
+    setTimeout(() => errorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+  };
+
   const handleRazorpayCheckout = async (event) => {
     event?.preventDefault?.();
     setPaymentError('');
     const validationError = validateForm();
     if (validationError) {
-      setPaymentError(validationError);
+      showError(validationError);
+      return;
+    }
+    if (quote?.deliveryAvailable === false) {
+      showError('Sorry, we cannot deliver to this pincode yet.');
       return;
     }
 
@@ -1026,10 +1037,10 @@ function CheckoutPage({ cart, clearCart }) {
         theme: { color: '#0f172a' },
         modal: { ondismiss: () => setIsProcessing(false) }
       });
-      razorpay.on?.('payment.failed', () => setPaymentError('Payment failed. You can try again.'));
+      razorpay.on?.('payment.failed', () => { showError('Payment failed. You can try again.'); setIsProcessing(false); });
       razorpay.open();
     } catch (error) {
-      setPaymentError(error.message || 'Payment could not be completed.');
+      showError(error.message || 'Payment could not be completed.');
       setIsProcessing(false);
     }
   };
@@ -1059,7 +1070,7 @@ function CheckoutPage({ cart, clearCart }) {
     <div className="container page-shell checkout-shell">
       <div className="checkout-panel">
         <h1>Checkout</h1>
-        <form onSubmit={handleRazorpayCheckout} className="checkout-form">
+        <form onSubmit={handleRazorpayCheckout} className="checkout-form" noValidate>
           <AddressPicker onPick={(a) => { const [firstName, ...rest] = String(a.name || '').split(' '); setForm((cur) => ({ ...cur, firstName: firstName || '', lastName: rest.join(' '), phone: a.phone || '', street: a.street || '', apartment: a.apartment || '', landmark: a.landmark || '', city: a.city || '', state: a.state || '', pincode: a.pincode || '' })); }} />
           <div className="field-row">
             <label>
@@ -1102,7 +1113,7 @@ function CheckoutPage({ cart, clearCart }) {
             </label>
             <label>
               State
-              <select required value={form.state} onChange={(event) => setForm({ ...form, state: event.target.value })}>
+              <select value={form.state} onChange={(event) => setForm({ ...form, state: event.target.value })}>
                 <option value="">Select state</option>
                 {form.state && !INDIAN_STATES.includes(form.state) && <option value={form.state}>{form.state}</option>}
                 {INDIAN_STATES.map((st) => <option key={st} value={st}>{st}</option>)}
@@ -1134,14 +1145,15 @@ function CheckoutPage({ cart, clearCart }) {
             <input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} />
             I agree to the order terms and delivery policy.
           </label>
-          <button type="submit" className="primary-btn" disabled={isProcessing || !quote || (pin !== '' && quote.pincode !== pin) || quote.deliveryAvailable === false}>{isProcessing ? 'Processing...' : (quote?.advance?.eligible && plan === 'advance' ? `Pay ${formatMoney(quote.advance.advance)} advance securely` : 'Pay securely with Razorpay')}</button>
+          <button type="submit" className="primary-btn" disabled={isProcessing || quote?.deliveryAvailable === false}>{isProcessing ? 'Processing...' : (quote?.advance?.eligible && plan === 'advance' ? `Pay ${formatMoney(quote.advance.advance)} advance securely` : 'Pay securely with Razorpay')}</button>
           {quote && quote.deliveryAvailable === false && <p className="notice-text error">Sorry, we cannot deliver to this pincode yet.</p>}
           {submitted && (
             <p className="success-text">
               Payment received. Order {orderId} is confirmed. <Link to={`/track/${encodeURIComponent(trackingToken)}`}>Track your order</Link>. Save this link: anyone with it can view this order's progress.
             </p>
           )}
-          {paymentError && <p className="notice-text error">{paymentError}</p>}
+          {quoteError && !paymentError && <p className="notice-text error">{quoteError}</p>}
+          {paymentError && <p ref={errorRef} role="alert" className="notice-text error">{paymentError}</p>}
         </form>
       </div>
 
